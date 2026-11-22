@@ -79,7 +79,7 @@ date: 2026-11-22
 ## 5. 主要發現與研究限制 (Key Findings & Limitations)
 - **主要發現** `[paper4.pdf, VI.C Results, Fig. 3]`：  
   在 100 次運行評估中，聯合策略模型（Joint Policy）全面超越三種基線（DP+P 分離策略、RD+P 最快完成規則、RD+P 高成功率規則）：
-  1. *成功率最高*：在人類有偏離機率與回饋噪聲下，Joint Policy 達成最高任務完成率（約 95%）。
+  1. *成功率最高*：在人類有偏離機率與回饋噪聲下，Joint Policy 達成最高任務完成率（"Joint Policy could achieve the highest success rate"，論文於 Fig. 3a 展示柱狀圖，目測約 95%，正文未列出具體文字數據）。
   2. *回合長度最短*：兼顧資訊傳遞與導航效率，平均所需步數最短（約 28 步，基線需 35~50 步）。
   3. *共處率（Proximity Rate, PR）最高*：  
      > 原文短句引用：*"Joint Policy has the highest proximity rate, and DP+P and RD+Ps have a lower proximity rate. This indicates that the DP+P tries to inform entities without considering the user’s location to minimize the episode length, resulting in a lower success rate than Joint Policy."*  

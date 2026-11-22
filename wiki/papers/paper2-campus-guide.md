@@ -31,7 +31,7 @@ date: 2026-11-22
 ---
 
 ## 1. 核心摘要 (TL;DR)
-本研究設計並實作了一款具備社會意識（Socially Cognizant）的自主校園導覽機器人，旨在協助迷路學生導引方向。系統採用跨領域與利害關係人共同設計方法，整合語音與觸控互動、改進型動態扇形成本地圖（Social Costmap）以及深度相機行人偵測，並在室內環境完成了初步模組與端到端實證評估。
+本研究設計並實作了一款具備社會意識（Socially Cognizant）的自主校園導覽機器人，旨在協助迷路學生導引方向。系統採用跨領域與利害關係人共同設計方法，整合語音與觸控互動、改進型動態扇形成本地圖（Social Costmap）以及深度相機行人偵測，並在室內環境完成了獨立與整合的系統模組評估（evaluation in isolation and in concert）。
 
 ## 2. 研究背景與痛點 (Problem Statement)
 - **校園迷路問題** `[paper2.pdf, 1 INTRODUCTION, 2 DESIGN CONTEXT]`：  

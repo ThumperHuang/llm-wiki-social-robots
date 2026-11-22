@@ -54,7 +54,7 @@ date: 2026-11-22
 ---
 
 ## 1. 核心摘要 (TL;DR)
-本研究在芬蘭奧盧大學校園利用軟銀人形社交機器人 Pepper，透過問卷與半結構式訪談調查了 59 位師生對校園社交機器人的信任因素與預期應用場景。研究指出「運作透明度（Operational Transparency）」與「營運者透明度（Operator Transparency）」是建立使用者信任的核心基石，並擴充了 Hancock 等人的機器人信任因素模型與 Baraka 等人的社交機器人特徵架構。
+本研究在芬蘭奧盧大學校園利用軟銀人形社交機器人 Pepper，透過問卷與半結構式訪談調查了 59 位師生對校園社交機器人的信任因素與預期應用場景。研究指出「運作透明度（Operational Transparency）」與「營運者透明度（Operator Transparency）」是取得使用者信任的關鍵（keys for gaining users' trust），並擴充了 Hancock 等人的機器人信任因素模型與 Baraka 等人的社交機器人特徵架構。
 
 ## 2. 研究背景與痛點 (Problem Statement)
 - **校園環境缺乏理論指導與設計實務** `[paper3.pdf, 1 Introduction]`：  
@@ -108,7 +108,7 @@ date: 2026-11-22
   - *隱私態度分歧*：部分人嚴格要求資料隱私與遮蔽臉部資訊；少數受試者則持消極態度，認為數位世界本無隱私（"there's no privacy at all"），故不在意機器人蒐集資料。
 - **研究限制 (Limitations)** `[paper3.pdf, 6 Limitations & Future work]`：
   - 受試者樣本中年輕大學生以及來自亞洲、具備科技背景者比例偏高（"over-representation of young university students, and international students from Asian countries or those with background in technology"），限制了跨文化泛化性。
-  - 訪談樣本僅 17 人，特定應用（如導航、實驗室輔助）的實際衝擊有待進一步實證評估。
+  - 訪談樣本僅 17 人，特定應用（如導航、實驗室輔助）的實際衝擊有待進一步評估（further research / practical impact）。
 
 ## 6. 課堂報告亮點與啟發 (Takeaways for Presentation)
 > ⚠️ **註：以下內容為整理者之教學詮釋與報告建議，非論文原文主張。**

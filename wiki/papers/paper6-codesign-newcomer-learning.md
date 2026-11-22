@@ -44,7 +44,7 @@ date: 2026-11-22
 ---
 
 ## 1. 核心摘要 (TL;DR)
-本研究透過與加拿大非營利讀寫組織（UFL）之資深第二語言導師共同設計（Co-design），探討桌上型社交輔助機器人 Maple 如何協助新移民兒童進行英語學習與在地文化融入。研究識別出社區課輔現場的四大教學瓶頸，將機器人定位為非威脅性的「同儕伴侶（Peer-like companion）」與「注意負載平衡器」，並提出基於「導師–學童–機器人」三方互動模式的五項初步設計準則。
+本研究透過與加拿大非營利讀寫組織（UFL）之第二語言專家導師（expert L2 tutors）共同設計（Co-design），探討桌上型社交輔助機器人 Maple 如何協助新移民兒童進行英語學習與在地文化融入。研究識別出社區課輔現場的四大教學瓶頸，將機器人定位為非威脅性的「同儕伴侶（Peer-like companion）」與「注意負載平衡器」，並提出基於「導師–學童–機器人」三方互動模式的五項初步設計準則。
 
 ## 2. 研究背景與痛點 (Problem Statement)
 - **新移民兒童的雙重挑戰** `[paper6.pdf, 1 Introduction]`：  
@@ -64,7 +64,7 @@ date: 2026-11-22
   基於 ROS Noetic（Ninjemys 發行版），整合運動控制、音訊輸出、臉部動畫（PyLips 套件實現唇形同步）與行為樹（Behavior Tree）；對話與動作調度遵循 RoboSync 原則；提供以 React 開發之平板網頁介面，透過 ROS bridge 讓導師無需撰寫程式碼即可編輯故事活動與測驗。
 - **共同設計流程與參與專家** `[paper6.pdf, 2.1 Co-designers, 2.3 Procedure and Analysis]`：  
   > 原文短句引用：*"Our design team comprised four participants: two expert second-language (L2) tutors from UFL that delivers literacy programs and two Human–Robot Interaction (HRI) researchers (one professor and one graduate student)... We conducted one 60-minute online co-design meeting with the participants as a group over Microsoft Teams."*  
-  （共 4 位參與者：2 位 UFL 資深第二語言導師，分別具 7 年與 2.5 年資歷；2 位 HRI 研究者，包含 1 位教授與 1 位研究生；進行 60 分鐘線上會議與錄音轉錄分析）。
+  （共 4 位參與者：2 位 UFL 第二語言專家導師，分別具 7 年與 2.5 年資歷；2 位 HRI 研究者，包含 1 位教授與 1 位研究生；進行 60 分鐘線上會議與錄音轉錄分析）。
 
 ## 4. 使用者研究與實驗設計 (User Study & Evaluation)
 - **實證評估狀態** `[paper6.pdf, 4 Discussion and Future Work, 5 Conclusion]`：  

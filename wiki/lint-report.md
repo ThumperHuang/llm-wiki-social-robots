@@ -140,19 +140,20 @@
 | **Paper 6** | 4. 使用者研究與實驗設計 | 未來規劃：約 4 名 5–10 歲學童 | `4 Discussion and Future Work` | p. 39 | *"children aged between 5-10 years old and would be coordinated with UFL... interaction, that will have approximately four children."* | ✅ 驗證核可 |
 | **Paper 6** | 5. 主要發現與設計準則 | 5 項初步設計準則 (Guideline 1~5) | `3.4 Preliminary Design Guidelines` | p. 38-39 | *"outline a set of preliminary design guidelines for a peer SAR robot (3.4.1 Guideline 1 to 3.4.5 Guideline 5)"* | ✅ 驗證核可 |
 
-#### 3. 各篇 TL;DR 強語氣詞之原文依據查核表
+#### 3. 各篇 TL;DR 強語氣詞與專業術語之原文依據查核表
 
-| 論文編號 | TL;DR 使用之強語氣詞彙 | PDF 原文詞彙與出處章節 | 刊物頁碼 | 原文短句佐證與說明 |
+| 論文編號 | 原先使用詞彙 | 論文實際原文用語與出處章節 | 刊物頁碼 | 原文短句佐證與修正說明 |
 | :--- | :--- | :--- | :--- | :--- |
-| **Paper 2** | 「實證評估」 | `7 EVALUATION AND RESULTS` | p. 1232 | *"System modules were evaluated independently, as well as in concert... The end-to-end process from speech or touch command to collision-free guidance... was shown to be successful and reliable on each of the nine trials."*（論文第 7 節專門進行評估實驗，用語有據）。 |
+| **Paper 2** | 「實證評估」 | `7 EVALUATION AND RESULTS` | p. 1232 | *"System modules were evaluated independently, as well as in concert... The end-to-end process from speech or touch command to collision-free guidance... was shown to be successful and reliable on each of the nine trials."*<br>修正：依據論文原文改為**「獨立與整合之系統模組評估 (evaluation in isolation and in concert)」**，如實反映論文對各模組及整體 9 次試驗的測試架構。 |
 | **Paper 2** | 「共同設計」 | `2.2 Stakeholder Engagement` | p. 1230 | *"crucial to identify and engage with as many stakeholders as possible... RUDSOTP... provided valuable input during our design process."*（論文透過利益相關者會議進行需求探討，符合共同設計參與原則）。 |
-| **Paper 3** | 「核心基石」 | `1 Introduction`, `5.2 Transparency...` | p. 176, 183 | *"we highlight operational and operator transparency as keys for gaining users’ trust in on-campus social robots."* 及 *"We identified transparency as a critical aspect influencing users’ trust"*（原文使用 "keys" 與 "critical aspect"，以「核心基石」詮釋合乎原文意旨）。 |
+| **Paper 3** | 「核心基石」 | `1 Introduction`, `5.2 Transparency...` | p. 176, 183 | *"we highlight operational and operator transparency as keys for gaining users’ trust in on-campus social robots."* 及 *"We identified transparency as a critical aspect influencing users’ trust"*<br>修正：依據論文原文精確改為**「取得使用者信任的關鍵 (keys for gaining users' trust)」**與**「關鍵面向 (critical aspect)」**，避免使用非論文原創之修辭。 |
 | **Paper 3** | 「擴充」 | `1 Introduction`, `4.2.4` | p. 177, 181 | *"we put forward extensions to Hancock et al.’s Factors of Trust [15] and to Baraka et al.’s social robot characterisation framework [2]."*（原文直接使用 "extensions" 與 "extension of the framework"，完全吻合）。 |
 | **Paper 4** | 「顯著優於」 | `Abstract`, `I. INTRODUCTION`, `VI.C` | p. 7893, 7897 | *"We show that our approach outperforms baselines from the literature in task completion rate and execution time"* 及 *"Both figures demonstrate that our approach outperforms the baselines."*（原文使用 "outperforms"，表意直接且經 100 次運行數據支持）。 |
+| **Paper 4** | 「~95% 任務完成率」 | `VI.C Results`, `Fig. 3a` | p. 7897 | *"Joint Policy could achieve the highest success rate"*<br>說明：正文未列出「95%」具體文字數值，該數字係依據 Fig. 3a 柱狀圖高度之目測估計值。頁面已加註「目測約 95%，正文未列出具體文字數據」以示嚴謹。 |
 | **Paper 4** | 「真實世界機器人驗證」 | `VI.D Demonstration in the Real World` | p. 7897 | *"We have demonstrated our approach using a real robot. We deployed our joint policy model on a segway-based mobile robot. The robot interacts with a human while traversing an environment where three rooms exist."*（章節標題即為 "Demonstration in the Real World"，具實體機實驗支援）。 |
 | **Paper 5** | 「實地研究」 | `Abstract`, `1 Introduction` | p. 2, 3 | *"We deployed our prototype in a geology museum, where remote participants (n = 20) used the robot to tour the museum."* 及 *"Conducted field studies in a genuine geology museum"*（原文明確使用 "field studies in a genuine geology museum"，實地部署無誤）。 |
 | **Paper 6** | 「共同設計 (Co-design)」 | `論文標題`, `Abstract`, `1 Introduction` | p. 36 | 標題為 *"Co-designing a Social Robot..."*，內文 *"This research presents a co-design study with program tutors and coordinators... conducted a co-design meeting"*（原文核心方法即為 co-design）。 |
-| **Paper 6** | 「資深」 | `2.1 Co-designers`, `1 Introduction` | p. 36, 37 | *"two expert second-language (L2) tutors from UFL... with seven years of experience"* 及 *"expert-grounded insights"*（原文使用 "expert" 且導師具備 7 年與 2.5 年資歷，以「資深專家導師」表述合乎事實）。 |
+| **Paper 6** | 「資深專家導師」 | `2.1 Co-designers`, `1 Introduction` | p. 36, 37 | *"two expert second-language (L2) tutors from UFL... with seven years of experience"* 及 *"expert-grounded insights"*<br>修正：依據論文原文詞彙改為**「第二語言專家導師 (expert second-language tutors / expert L2 tutors)」**，符合論文精確身分描述。 |
 
 ---
 
@@ -160,17 +161,31 @@
 
 - **檢查範圍**：全工作區 16 份 Markdown 文件（`wiki/` 內 15 份 + 根目錄 `AGENTS.md`）
 - **自動化檢查腳本**：使用 Python 遍歷分析所有相對連結、引用關係與論文出處標籤。
-- **檢查項目與發現問題**：
+- **排除規則與決策記錄**：
+  - **排除 AGENTS.md 內之範例示範連結**：在初次掃描時，`AGENTS.md` 第 46 行之相對路徑範例語法 `[Paper 1](../papers/paper1-dialogue-authoring.md)` 因位於儲存庫根目錄，若以實際目錄結構解析會指向不存在的外部路徑。為求語法範例之完整性與指導性，決定不破壞 `AGENTS.md` 既有模板格式，而是在 `AGENTS.md` 第 5.2 節明確規範「Lint 檢查對象為 `wiki/` 目錄下的知識庫內容文件，排除 `AGENTS.md` 規範手冊中的示範語法與模板範例連結」，並在此誠實記錄該設計決策。
+- **檢查項目與執行結果**：
   1. **死連結檢查 (Broken Link Linting)**：
-     - *第一輪掃描發現問題*：`AGENTS.md` 第 46 行中，做為相對路徑示範之 `[Paper 1](../papers/paper1-dialogue-authoring.md)` 撰寫於普通文字中且未加反引號，因位於根目錄，被解析為無效之外層路徑。
-     - *修正動作*：將 `AGENTS.md` 第 46 行之路徑示範改以反引號（inline code）包覆並加註說明（在 `wiki/concepts/` 引用論文使用 `[Paper 1](../papers/paper1-dialogue-authoring.md)`，在首頁使用 `[Paper 1](papers/paper1-dialogue-authoring.md)`）。
-     - *第二輪複驗結果*：全站 93 條活躍相對連結（Live Relative Links）全數有效，**死連結數量：0**（通過 ✅）。
+     - 遍歷 `wiki/` 內部所有文件的 Markdown 相對路徑與標題錨點。
+     - 全站 93 條活躍相對連結（Live Relative Links）全數有效，**死連結數量：0**（通過 ✅）。
   2. **孤立頁面檢查 (Orphan Page Linting)**：
-     - *掃描標的*：檢驗 `wiki/` 內除了 `index.md` 外之其餘 14 份文件是否皆被有效參照。
-     - *掃描結果*：所有 14 份文件均被 `wiki/index.md`、`wiki/synthesis.md` 及各相關頁面雙向參照，**孤立頁面數量：0**（通過 ✅）。
+     - 檢驗 `wiki/` 內除 `index.md` 以外之其餘 14 份文件是否皆被有效參照。
+     - 所有 14 份文件均被 `wiki/index.md`、`wiki/synthesis.md` 及各相關頁面雙向參照，**孤立頁面數量：0**（通過 ✅）。
   3. **無出處頁面檢查 (Ungrounded Claim Linting)**：
-     - *掃描標的*：檢驗 `wiki/papers/`（6 篇）、`wiki/concepts/`（5 篇）與 `wiki/synthesis.md` 共 12 份內容文件是否皆具備合規的論文出處標註（`[paperX.pdf, ...]`）。
-     - *掃描結果*：12 份文件全數包含合規之章節出處標籤（`synthesis.md` 含 49 處出處、單篇論文筆記平均含 14 處出處、概念專頁均精準標註），**無出處文件數量：0**（通過 ✅）。
+     - 檢驗 `wiki/papers/`（6 篇）、`wiki/concepts/`（5 篇）與 `wiki/synthesis.md` 共 12 份內容文件是否皆具備合規的論文出處標註（`[paperX.pdf, ...]`）。
+     - 12 份文件全數包含合規之章節出處標籤（`synthesis.md` 含 49 處出處、單篇論文筆記平均含 14 處出處、概念專頁均精準標註），**無出處文件數量：0**（通過 ✅）。
 - **最終判定**：**檢查點 B（全局 Lint 檢查）正式通過**。
+
+---
+
+## 3. Lint 的限制 (Limitations of Lint)
+
+雖然本知識庫建立並通過了死連結、無出處頁面與孤島頁面三項自動化 Lint 檢查，但必須明確指出此類語法檢查的本質限制：
+
+1. **僅驗證形式與結構，無法保證語意與事實真確性**：  
+   自動化 Lint 僅能確認檔案之間「是否存在斷鏈」或「是否包含形式合規的出處標籤（如 `[paperX.pdf, Section Y]`）」，但**無法辨識出處標籤是否被張冠李戴，亦無法驗證內文描述是否完全符合原始論文的事實**。
+2. **無法自動檢驗數值過度推論與語氣誇大**：  
+   例如在 Paper 1 中將圖表範例數值誤當作系統預設值、將 Section 4 的未來工作（Future Work）推測誤寫為已證實之成效；在 Paper 4 中將 Fig. 3a 的目測估計值（約 95%）誤當作正文精確數據；或使用論文未曾出現的強烈修辭（如「核心基石」、「資深專家」）。這些問題均無法透過語法層級的 Lint 工具捕捉。
+3. **出處精確度高度依賴前置審查（檢查點 A）**：  
+   知識庫的事實忠實性（Factual Grounding），核心防線依然在於單篇吸納階段的「檢查點 A」人工對照原始 PDF 審查（核對實際章節標題、對照具體數字之原文短句、區分推測性詞彙與已證實結論）。自動化 Lint 僅為後續的整合健全性（Integrity）提供防護網。
 
 
