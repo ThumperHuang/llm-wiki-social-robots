@@ -15,3 +15,5 @@
 | 2026-11-22 | Ingest | wiki/papers/paper6-codesign-newcomer-learning.md, wiki/index.md, wiki/concepts/robot-roles.md, wiki/concepts/application-domains.md, wiki/log.md | 完成 Paper 6 文獻吸納，更新 index.md 與相關概念頁，專家資歷與共同設計參數皆附原文短句，通過單篇檢查點 A |
 | 2026-11-22 | Audit (Lint) | wiki/lint-report.md, wiki/log.md | 執行 Paper 2～6 深度數字與出處全面核對，驗證 raw/paper3.pdf 與 raw/paper5.pdf 論文原始性，產出數值清單與 TL;DR 語氣詞佐證表 |
 | 2026-11-22 | Synthesize (Concepts) | wiki/concepts/*.md, wiki/log.md | 依 AGENTS.md 6.2 節重構 5 篇核心概念專頁（各篇 300–500 字，含出處章節、原文短句、衝突觀點並列與推測/實證區分） |
+| 2026-11-22 | Synthesize & Index | wiki/synthesis.md, wiki/index.md, wiki/log.md | 建立橫向比較頁 synthesis.md（6 篇大表每格附出處、設計空間圖、課堂講綱）；更新 index.md 加入初學者閱讀路徑與全頁面相對路徑連結 |
+| 2026-11-22 | Lint (Checkpoint B) | AGENTS.md, wiki/lint-report.md, wiki/log.md | 執行全局 Lint 檢查（掃描 93 條相對連結、14 份 Wiki 文件、12 份內容文件）：修正 AGENTS.md 示範路徑轉為 code 格式後複驗通過，死連結 0、孤島頁面 0、無出處頁面 0 |

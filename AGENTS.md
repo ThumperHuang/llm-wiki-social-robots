@@ -43,7 +43,7 @@ my-wiki/
 ```
 
 - **檔案命名**：一律使用英文小寫與連字號（`kebab-case`），禁止在檔名中使用中文或特殊字元。
-- **檔案路徑引用**：一律採用標準 Markdown 相對路徑（例如 `[Paper 1](../papers/paper1-dialogue-authoring.md)`）。
+- **檔案路徑引用**：一律採用標準 Markdown 相對路徑（例如在 `wiki/concepts/` 中引用論文使用 `[Paper 1](../papers/paper1-dialogue-authoring.md)`，在首頁使用 `[Paper 1](papers/paper1-dialogue-authoring.md)`）。
 - **操作紀錄（`wiki/log.md`）規範**：每次執行 Ingest、Lint 或重大內容修改時，均須在檔案末尾追加一筆紀錄，格式為：
   `日期 | 操作 | 影響檔案 | 備註`（例如：`2026-11-22 | Ingest | wiki/papers/paper1-*.md, wiki/index.md, wiki/log.md | 完成 Paper 1 摘要與索引更新`）。
 

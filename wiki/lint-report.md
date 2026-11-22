@@ -154,3 +154,23 @@
 | **Paper 6** | 「共同設計 (Co-design)」 | `論文標題`, `Abstract`, `1 Introduction` | p. 36 | 標題為 *"Co-designing a Social Robot..."*，內文 *"This research presents a co-design study with program tutors and coordinators... conducted a co-design meeting"*（原文核心方法即為 co-design）。 |
 | **Paper 6** | 「資深」 | `2.1 Co-designers`, `1 Introduction` | p. 36, 37 | *"two expert second-language (L2) tutors from UFL... with seven years of experience"* 及 *"expert-grounded insights"*（原文使用 "expert" 且導師具備 7 年與 2.5 年資歷，以「資深專家導師」表述合乎事實）。 |
 
+---
+
+### 2026-11-22 | 檢查點 B：全局 Lint 檢查 (Broken Links, Ungrounded Claims, Orphan Pages)
+
+- **檢查範圍**：全工作區 16 份 Markdown 文件（`wiki/` 內 15 份 + 根目錄 `AGENTS.md`）
+- **自動化檢查腳本**：使用 Python 遍歷分析所有相對連結、引用關係與論文出處標籤。
+- **檢查項目與發現問題**：
+  1. **死連結檢查 (Broken Link Linting)**：
+     - *第一輪掃描發現問題*：`AGENTS.md` 第 46 行中，做為相對路徑示範之 `[Paper 1](../papers/paper1-dialogue-authoring.md)` 撰寫於普通文字中且未加反引號，因位於根目錄，被解析為無效之外層路徑。
+     - *修正動作*：將 `AGENTS.md` 第 46 行之路徑示範改以反引號（inline code）包覆並加註說明（在 `wiki/concepts/` 引用論文使用 `[Paper 1](../papers/paper1-dialogue-authoring.md)`，在首頁使用 `[Paper 1](papers/paper1-dialogue-authoring.md)`）。
+     - *第二輪複驗結果*：全站 93 條活躍相對連結（Live Relative Links）全數有效，**死連結數量：0**（通過 ✅）。
+  2. **孤立頁面檢查 (Orphan Page Linting)**：
+     - *掃描標的*：檢驗 `wiki/` 內除了 `index.md` 外之其餘 14 份文件是否皆被有效參照。
+     - *掃描結果*：所有 14 份文件均被 `wiki/index.md`、`wiki/synthesis.md` 及各相關頁面雙向參照，**孤立頁面數量：0**（通過 ✅）。
+  3. **無出處頁面檢查 (Ungrounded Claim Linting)**：
+     - *掃描標的*：檢驗 `wiki/papers/`（6 篇）、`wiki/concepts/`（5 篇）與 `wiki/synthesis.md` 共 12 份內容文件是否皆具備合規的論文出處標註（`[paperX.pdf, ...]`）。
+     - *掃描結果*：12 份文件全數包含合規之章節出處標籤（`synthesis.md` 含 49 處出處、單篇論文筆記平均含 14 處出處、概念專頁均精準標註），**無出處文件數量：0**（通過 ✅）。
+- **最終判定**：**檢查點 B（全局 Lint 檢查）正式通過**。
+
+
