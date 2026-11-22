@@ -1,0 +1,1263 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>社交機器人的設計與應用</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d2e;
+    --surface2: #252840;
+    --accent: #6c8ef5;
+    --accent2: #a78bfa;
+    --accent3: #34d399;
+    --text: #e2e8f0;
+    --text-muted: #94a3b8;
+    --border: #2d3155;
+    --warning: #fbbf24;
+    --danger: #f87171;
+    --paper1: #6c8ef5;
+    --paper2: #34d399;
+    --paper3: #f97316;
+    --paper4: #a78bfa;
+    --paper5: #22d3ee;
+    --paper6: #fb7185;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', 'Microsoft JhengHei', 'PingFang TC', sans-serif;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* ── TOP BAR ── */
+  #topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 20px;
+    flex-shrink: 0;
+  }
+  #topbar-title { font-size: 0.85rem; color: var(--text-muted); }
+  #counter { font-size: 0.85rem; color: var(--accent); font-weight: 600; }
+
+  /* ── SLIDE AREA ── */
+  #slide-container {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+  }
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: none;
+    flex-direction: column;
+    padding: 48px 60px 100px;
+    overflow-y: auto;
+  }
+  .slide.active { display: flex; }
+
+  /* slide layout helpers */
+  .slide-header {
+    margin-bottom: 32px;
+    flex-shrink: 0;
+  }
+  .slide-tag {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+  }
+  .slide-tag.green  { background: var(--accent3); }
+  .slide-tag.purple { background: var(--accent2); }
+  .slide-tag.orange { background: #f97316; }
+  .slide-tag.cyan   { background: #22d3ee; }
+  .slide-tag.pink   { background: #fb7185; }
+  .slide-tag.gray   { background: var(--text-muted); }
+
+  h1.slide-title {
+    font-size: 2.4rem;
+    font-weight: 800;
+    line-height: 1.2;
+    color: #fff;
+  }
+  h2.slide-title {
+    font-size: 1.9rem;
+    font-weight: 700;
+    line-height: 1.25;
+    color: #fff;
+  }
+  .slide-subtitle {
+    font-size: 1rem;
+    color: var(--text-muted);
+    margin-top: 8px;
+  }
+
+  /* content blocks */
+  .content { flex: 1; display: flex; flex-direction: column; gap: 18px; }
+  .content-row { display: flex; gap: 18px; flex-wrap: wrap; }
+  .content-row > * { flex: 1; min-width: 260px; }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 22px;
+  }
+  .card-title {
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+  .card-title.green  { color: var(--accent3); }
+  .card-title.purple { color: var(--accent2); }
+  .card-title.orange { color: #f97316; }
+  .card-title.cyan   { color: #22d3ee; }
+  .card-title.pink   { color: #fb7185; }
+
+  p, li { font-size: 0.93rem; line-height: 1.65; color: var(--text); }
+  ul, ol { padding-left: 20px; }
+  li { margin-bottom: 6px; }
+
+  /* pill badges */
+  .badge {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 2px 9px;
+    border-radius: 20px;
+    margin: 2px 3px;
+    white-space: nowrap;
+  }
+  .badge-p1 { background: rgba(108,142,245,.2); color: var(--paper1); border: 1px solid var(--paper1); }
+  .badge-p2 { background: rgba(52,211,153,.2); color: var(--paper2); border: 1px solid var(--paper2); }
+  .badge-p3 { background: rgba(249,115,22,.2);  color: var(--paper3); border: 1px solid var(--paper3); }
+  .badge-p4 { background: rgba(167,139,250,.2); color: var(--paper4); border: 1px solid var(--paper4); }
+  .badge-p5 { background: rgba(34,211,238,.2);  color: var(--paper5); border: 1px solid var(--paper5); }
+  .badge-p6 { background: rgba(251,113,133,.2); color: var(--paper6); border: 1px solid var(--paper6); }
+
+  /* quote blocks */
+  blockquote {
+    background: rgba(108,142,245,.08);
+    border-left: 3px solid var(--accent);
+    padding: 10px 16px;
+    border-radius: 0 8px 8px 0;
+    margin: 8px 0;
+    font-size: 0.85rem;
+    font-style: italic;
+    color: var(--text-muted);
+  }
+
+  /* conflict / speculation callouts */
+  .callout {
+    display: flex;
+    gap: 10px;
+    background: rgba(251,191,36,.07);
+    border: 1px solid rgba(251,191,36,.3);
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 0.88rem;
+  }
+  .callout-icon { flex-shrink: 0; font-size: 1.1rem; }
+  .callout.speculation {
+    background: rgba(167,139,250,.07);
+    border-color: rgba(167,139,250,.3);
+  }
+  .callout.conflict {
+    background: rgba(248,113,113,.07);
+    border-color: rgba(248,113,113,.3);
+  }
+
+  /* paper overview grid */
+  .paper-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 14px; }
+  @media (max-width: 700px) { .paper-grid { grid-template-columns: 1fr; } }
+  .paper-card {
+    border-radius: 10px;
+    padding: 14px 16px;
+    border: 1px solid;
+  }
+  .paper-card h3 { font-size: 0.82rem; font-weight: 700; margin-bottom: 5px; }
+  .paper-card p  { font-size: 0.8rem; color: var(--text-muted); line-height: 1.5; }
+  .paper-card .venue { font-size: 0.72rem; font-weight: 600; margin-top: 4px; }
+
+  /* comparison table */
+  .cmp-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+  .cmp-table th {
+    background: var(--surface2);
+    padding: 9px 12px;
+    text-align: left;
+    color: var(--accent);
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .cmp-table td {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  .cmp-table tr:last-child td { border-bottom: none; }
+  .cmp-table tr:hover td { background: rgba(255,255,255,.03); }
+
+  /* design space spectrum */
+  .spectrum { display: flex; flex-direction: column; gap: 18px; }
+  .spectrum-row { display: flex; align-items: center; gap: 12px; }
+  .spectrum-label { width: 160px; flex-shrink: 0; font-size: 0.8rem; color: var(--text-muted); font-weight: 600; }
+  .spectrum-bar { flex: 1; display: flex; gap: 4px; align-items: center; }
+  .spec-item {
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .spec-arrow { color: var(--text-muted); font-size: 0.9rem; }
+
+  /* ── BOTTOM NAV ── */
+  #nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    padding: 14px 24px;
+    flex-shrink: 0;
+  }
+  .nav-btn {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 8px 22px;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    cursor: pointer;
+    transition: background .15s, border-color .15s;
+  }
+  .nav-btn:hover:not(:disabled) {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+  .nav-btn:disabled { opacity: .3; cursor: default; }
+
+  /* dot indicators */
+  #dots { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; justify-content: center; max-width: 400px; }
+  .dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--border);
+    cursor: pointer;
+    transition: background .15s, transform .15s;
+  }
+  .dot.active { background: var(--accent); transform: scale(1.4); }
+
+  /* ── FOOTER SOURCE TAG ── */
+  .source-tag {
+    position: absolute;
+    bottom: 56px;
+    right: 24px;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    background: var(--surface2);
+    padding: 4px 10px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    pointer-events: none;
+  }
+
+  /* title slide special */
+  .slide.title-slide {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding-bottom: 80px;
+  }
+  .title-slide h1 { font-size: 3rem; }
+  .title-slide .sub { font-size: 1.1rem; color: var(--text-muted); margin: 16px 0 32px; }
+  .title-slide .meta { font-size: 0.82rem; color: var(--text-muted); }
+  .title-logo { font-size: 4rem; margin-bottom: 20px; }
+
+  /* section divider slides */
+  .slide.divider-slide {
+    justify-content: center;
+    align-items: flex-start;
+    padding-bottom: 80px;
+  }
+  .big-number {
+    font-size: 6rem;
+    font-weight: 900;
+    color: var(--surface2);
+    line-height: 1;
+    margin-bottom: -10px;
+  }
+
+  /* highlight box */
+  .highlight {
+    background: rgba(108,142,245,.12);
+    border: 1px solid rgba(108,142,245,.3);
+    border-radius: 10px;
+    padding: 14px 18px;
+    font-size: 0.9rem;
+  }
+
+  hr.slide-divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 10px 0;
+  }
+
+  /* scrollbar */
+  .slide::-webkit-scrollbar { width: 5px; }
+  .slide::-webkit-scrollbar-track { background: transparent; }
+  .slide::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div id="topbar">
+  <span id="topbar-title">社交機器人的設計與應用 | Design &amp; Application of Social Robots</span>
+  <span id="counter">1 / 24</span>
+</div>
+
+<!-- SLIDES -->
+<div id="slide-container">
+
+<!-- ═══════════════════════════════════════════════
+     Slide 1: Title
+════════════════════════════════════════════════ -->
+<div class="slide title-slide active" id="s1">
+  <div class="title-logo">🤖</div>
+  <div class="slide-tag">HRI · HCI · Robotics</div>
+  <h1 class="slide-title">社交機器人的設計與應用</h1>
+  <p class="sub">Design and Application of Social Robots<br>以 6 篇頂尖人機互動論文為基礎的教學導覽</p>
+  <div class="meta">
+    <p>涵蓋論文：HRI '24 · OZCHI '25 · IROS '23 · UIST '25 · HRI '26</p>
+    <p style="margin-top:6px;">知識來源：LLM Wiki（嚴格奠基於原始論文 PDF）</p>
+  </div>
+  <div class="source-tag">來源：wiki/index.md</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     Slide 2: 什麼是社交機器人？
+════════════════════════════════════════════════ -->
+<div class="slide" id="s2">
+  <div class="slide-header">
+    <div class="slide-tag">第一章</div>
+    <h2 class="slide-title">什麼是社交機器人？</h2>
+    <p class="slide-subtitle">Social Robots — 超越機械動作的互動夥伴</p>
+  </div>
+  <div class="content">
+    <div class="content-row">
+      <div class="card">
+        <div class="card-title">定義</div>
+        <p>社交機器人（Social Robots）是能夠在社交情境下與人類互動、溝通並建立社會連結的具身機器人系統。它們不僅執行物理任務，更透過語言、手勢與表情與人類溝通。</p>
+      </div>
+      <div class="card">
+        <div class="card-title green">社交輔助機器人 (SAR)</div>
+        <p>在教育、醫療、陪伴等領域發揮輔助功能。在敏感照護領域，主張應保留「人在迴路中（human in the loop）」。</p>
+        <blockquote>"In domains where socially assistive robots are used, there ought to be a human in the loop." — paper1.pdf, Section 1</blockquote>
+      </div>
+    </div>
+    <div class="content-row">
+      <div class="card">
+        <div class="card-title purple">本課程涵蓋的核心問題</div>
+        <ul>
+          <li>🗣️ 如何讓機器人理解並生成自然語言？</li>
+          <li>🧭 如何在擁擠環境中安全友善地移動？</li>
+          <li>🤝 使用者為什麼信任（或不信任）機器人？</li>
+          <li>🎭 機器人應扮演什麼社會角色？</li>
+          <li>🏫 哪些場域最能發揮社交機器人的價值？</li>
+        </ul>
+      </div>
+    </div>
+    <div class="highlight">
+      📌 本簡報內容嚴格來自 6 篇原始學術論文，推測性觀點將以 ⚠️ 明確標示，衝突觀點並列呈現。
+    </div>
+  </div>
+  <div class="source-tag">來源：wiki/index.md · wiki/concepts/robot-roles.md</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     Slide 3: 六篇論文概覽（上）
+════════════════════════════════════════════════ -->
+<div class="slide" id="s3">
+  <div class="slide-header">
+    <div class="slide-tag">第二章</div>
+    <h2 class="slide-title">六篇論文概覽（1–3）</h2>
+    <p class="slide-subtitle">涵蓋 HRI · OZCHI 兩大頂尖人機互動會議</p>
+  </div>
+  <div class="content">
+    <div class="paper-grid">
+      <div class="paper-card" style="border-color:var(--paper1);background:rgba(108,142,245,.06);">
+        <span class="badge badge-p1">Paper 1</span>
+        <h3 style="color:var(--paper1);">A Robot Dialogue Authoring Interface with Smart Capabilities</h3>
+        <p>為照護者設計的童書伴讀對話編寫介面。透過 spaCy NLP 斷句與自動補全，降低遙控內容建立的無形勞動負擔。</p>
+        <p class="venue" style="color:var(--paper1);">HRI '24 (Short Paper)</p>
+      </div>
+      <div class="paper-card" style="border-color:var(--paper2);background:rgba(52,211,153,.06);">
+        <span class="badge badge-p2">Paper 2</span>
+        <h3 style="color:var(--paper2);">Development of a Socially Cognizant Robotic Campus Guide</h3>
+        <p>具備社會意識的校園導覽機器人。整合動態扇形 Costmap、YOLOv5 行人偵測與 GPT 語音生成，完成 9 次端到端測試。</p>
+        <p class="venue" style="color:var(--paper2);">HRI '24 Companion</p>
+      </div>
+      <div class="paper-card" style="border-color:var(--paper3);background:rgba(249,115,22,.06);">
+        <span class="badge badge-p3">Paper 3</span>
+        <h3 style="color:var(--paper3);">Factors of Trust for Successfully Adopting Social Robots on the Campus</h3>
+        <p>59 位師生的校園 Pepper 信任因素混合研究。建立「運作透明度」與「營運者透明度」雙維度信任架構。</p>
+        <p class="venue" style="color:var(--paper3);">OZCHI '25</p>
+      </div>
+    </div>
+  </div>
+  <div class="source-tag">來源：wiki/synthesis.md · wiki/papers/paper1,2,3-*.md</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     Slide 4: 六篇論文概覽（下）
+════════════════════════════════════════════════ -->
+<div class="slide" id="s4">
+  <div class="slide-header">
+    <div class="slide-tag">第二章</div>
+    <h2 class="slide-title">六篇論文概覽（4–6）</h2>
+    <p class="slide-subtitle">涵蓋 IROS · UIST · HRI 頂尖期刊/會議</p>
+  </div>
+  <div class="content">
+    <div class="paper-grid">
+      <div class="paper-card" style="border-color:var(--paper4);background:rgba(167,139,250,.06);">
+        <span class="badge badge-p4">Paper 4</span>
+        <h3 style="color:var(--paper4);">Learning Joint Policies for Human-Robot Dialog and Co-Navigation</h3>
+        <p>透過深度循環強化學習（RecurrentPPO），讓機器人同時學習對話與同行導航聯合策略，部署於 Segway 實體機。</p>
+        <p class="venue" style="color:var(--paper4);">IROS '23</p>
+      </div>
+      <div class="paper-card" style="border-color:var(--paper5);background:rgba(34,211,238,.06);">
+        <span class="badge badge-p5">Paper 5</span>
+        <h3 style="color:var(--paper5);">NarraGuide: an LLM-based Narrative Mobile Robot for Remote Place Exploration</h3>
+        <p>GPT-4 驅動的地質博物館遠端臨場導覽系統。20 名受試者實地研究，揭露 LLM 幻覺與旁觀者動態雙面刃效應。</p>
+        <p class="venue" style="color:var(--paper5);">UIST '25</p>
+      </div>
+      <div class="paper-card" style="border-color:var(--paper6);background:rgba(251,113,133,.06);">
+        <span class="badge badge-p6">Paper 6</span>
+        <h3 style="color:var(--paper6);">Co-designing a Social Robot for Newcomer Children's Cultural and Language Learning</h3>
+        <p>與 L2 導師共同設計新移民兒童課輔夥伴 Maple，建立「導師–學童–機器人」三方互動架構與 5 項設計準則。</p>
+        <p class="venue" style="color:var(--paper6);">HRI '26 (Late-Breaking Report)</p>
+      </div>
+    </div>
+    <div class="callout speculation">
+      <span class="callout-icon">⚠️</span>
+      <span><strong>研究狀態說明：</strong>Paper 1 與 Paper 6 目前仍屬設計規劃或專家共同設計階段，尚未進行正式兒童實地量化實驗。Paper 6 未來規劃約 4 名 5–10 歲學童的個案研究（<em>"future work will explore several case studies... approximately four children"</em>）。</span>
+    </div>
+  </div>
+  <div class="source-tag">來源：wiki/synthesis.md · wiki/papers/paper4,5,6-*.md</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     Slide 5: 比較矩陣
+════════════════════════════════════════════════ -->
+<div class="slide" id="s5">
+  <div class="slide-header">
+    <div class="slide-tag green">第二章</div>
+    <h2 class="slide-title">六篇論文橫向比較矩陣</h2>
+  </div>
+  <div class="content">
+    <div class="card" style="overflow-x:auto;">
+      <table class="cmp-table">
+        <thead>
+          <tr>
+            <th>論文</th>
+            <th>應用場景</th>
+            <th>機器人角色</th>
+            <th>評估方法</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="badge badge-p1">P1</span></td>
+            <td>兒童伴讀 / 編寫介面</td>
+            <td>遠端遙控社交輔助夥伴</td>
+            <td>系統雛形 + 作者使用經驗<br><em>尚無量化實驗</em></td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-p2">P2</span></td>
+            <td>大學校園導覽</td>
+            <td>自主導航導覽員</td>
+            <td>獨立 + 整合模組評估<br>5+5+9 次試驗</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-p3">P3</span></td>
+            <td>校園半公共空間</td>
+            <td>多功能服務機器人（7類）</td>
+            <td>混合研究：59 名師生<br>問卷 44 + 訪談 17</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-p4">P4</span></td>
+            <td>房地產看屋導覽</td>
+            <td>主動引導房仲</td>
+            <td>500萬步訓練 + 100次評估<br>+ Segway 實體展示</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-p5">P5</span></td>
+            <td>地質博物館遠端臨場</td>
+            <td>導覽員 / 學習工具 / 化身</td>
+            <td>20 名受試者實地研究<br>對話日誌 + 訪談</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-p6">P6</span></td>
+            <td>新移民兒童課輔</td>
+            <td>同儕伴侶</td>
+            <td>4位L2專家共同設計<br>60分鐘線上工作坊</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="source-tag">來源：wiki/synthesis.md</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     Slide 6: 對話互動 — 導言
+════════════════════════════════════════════════ -->
+<div class="slide divider-slide" id="s6">
+  <div class="slide-header">
+    <div class="big-number">03</div>
+    <div class="slide-tag">第三章</div>
+    <h2 class="slide-title">對話與語言互動機制</h2>
+    <p class="slide-subtitle">Dialogue &amp; Language Interaction</p>
+  </div>
+  <div class="content">
+    <p style="max-width:600px;font-size:1.05rem;line-height:1.8;">
+      在社交機器人系統中，語言互動不僅涉及語意解析，更與<strong>說話時機</strong>、<strong>人機空間共處狀態</strong>及<strong>社交禮節</strong>緊密交織。
+      從規則驅動的 NLP 斷句，到具身化大語言模型（LLM）主動敘事，各論文展現了截然不同的技術取向。
+    </p>
+    <div class="content-row" style="max-width:700px;">
+      <div class="card">
+        <div class="card-title">本章涵蓋論文</div>
+        <p>
+          <span class="badge badge-p1">Paper 1</span> NLP 斷句編寫<br>
+          <span class="badge badge-p2">Paper 2</span> GPT 語音生成<br>
+          <span class="badge badge-p4">Paper 4</span> DRRL 對話策略<br>
+          <span class="badge badge-p5">Paper 5</span> 具身 LLM 敘事<br>
+          <span class="badge badge-p6">Paper 6</span> 多模態鷹架
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="source-tag">來源：wiki/concepts/dialogue-interaction.md</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     Slide 7: 對話互動 — 技術比較
+════════════════════════════════════════════════ -->
+<div class="slide" id="s7">
+  <div class="slide-header">
+    <div class="slide-tag">第三章</div>
+    <h2 class="slide-title">對話技術的四種進路</h2>
+  </div>
+  <div class="content">
+    <div class="content-row">
+      <div class="card">
+        <div class="card-title">① 規則與 NLP 輔助編寫</div>
+        <p><span class="badge badge-p1">Paper 1</span></p>
+        <p>使用 <code>spaCy</code> 依標點與語法從屬連接詞斷句（論文未給具體字數上限值），並自動插入破冰語句與問答反饋，降低照護者的無形勞動負擔。</p>
+        <blockquote>"By having shorter dialogue actions, teleoperators can better maintain the pace of conversation." — Section 2.2.2</blockquote>
+      </div>
+      <div class="card">
+        <div class="card-title green">② 語音 + LLM 檢索生成</div>
+        <p><span class="badge badge-p2">Paper 2</span></p>
+        <p>麥克風偵測音量超標時觸發；關鍵字查表（導引模式）與 GPT 情境生成（指示模式）並行。9 次端到端導覽全數成功。</p>
+        <blockquote>"reliable on each of the nine trials." — 7 EVALUATION AND RESULTS</blockquote>
+      </div>
+    </div>
+    <div class="content-row">
+      <div class="card">
+        <div class="card-title purple">③ 強化學習空間–對話聯合決策</div>
+        <p><span class="badge badge-p4">Paper 4</span></p>
+        <p>RecurrentPPO 同時學習「說話」與「移動」，使機器人學會在發話前優先確認人機共處狀態，達成最高共處率（proximity rate 接近 0.98，依 Fig. 3c 目測，正文未列文字數值）。</p>
+        <blockquote>"highest proximity rate... A higher proximity rate indicates that the robot can perceive the absence of the user." — VI.C</blockquote>
+      </div>
+      <div class="card">
+        <div class="card-title cyan">④ 具身化 LLM 空間敘事</div>
+        <p><span class="badge badge-p5">Paper 5</span></p>
+        <p>GPT-4 整合 2D 語義地圖，靜默 45 秒後主動提問。受試者顯著傾向接受推薦（接受 M=2.90 次 vs 拒絕 M=0.9 次，t(19)=4.06，<strong>p=0.0007</strong>）。</p>
+        <blockquote>"significantly more acceptance... than rejections [t(19) = 4.06, p = 0.0007]." — 5.1</blockquote>
+      </div>
+    </div>
+  </div>
+  <div class="source-tag">來源：wiki/concepts/dialogue-interaction.md</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     Slide 8: 對話互動 — 衝突與推測
+════════════════════════════════════════════════ -->
+<div class="slide" id="s8">
+  <div class="slide-header">
+    <div class="slide-tag">第三章</div>
+    <h2 class="slide-title">觀點衝突與推測標示</h2>
+    <p class="slide-subtitle">對話互動篇</p>
+  </div>
+  <div class="content">
+    <div class="callout conflict">
+      <span class="callout-icon">⚡</span>
+      <div>
+        <strong>主動搭話：有益 vs 造成困擾（情境不同，觀點相左）</strong><br>
+        <span class="badge badge-p5">Paper 5</span> 實證：在博物館自願參觀情境中，機器人 45 秒靜默後主動提問能顯著激發好奇心。<br>
+        <span class="badge badge-p3">Paper 3</span> 訪談：受試者認為在校園公共走廊隨機搭話會「太混亂」（<em>"too chaotic if Pepper was just randomly approaching people"</em>）。<br>
+        → <em>兩者受眾情境截然不同（自願實驗 vs 趕課行人），不宜逕行裁決哪方正確。</em>
+      </div>
+    </div>
+    <div class="callout speculation">
+      <span class="callout-icon">⚠️</span>
+      <div>
+        <strong>已驗證 vs 推測</strong>
+        <ul style="margin-top:8px;">
+          <li><span class="badge badge-p4">P4 ✅ 已驗證</span> 聯合策略優於交替基線（<em>"outperforms the baselines"</em>）——100 次模擬運行支持。</li>
+          <li><span class="badge badge-p1">P1 ⚠️ 推測</span> 論文作者推測（"We suspect"）專用編寫介面能提升速度與易用度，但尚未進行正式受試者實驗。</li>
+        </ul>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title pink">設計挑戰：自由對話靈活性 vs 事實正確性</div>
+      <p><span class="badge badge-p5">Paper 5</span> 發現 LLM 容易產生幻覺，非專業使用者難以察覺（<em>"it feels like right"</em> — P18）。<br>
+      <span class="badge badge-p6">Paper 6</span> 強調多語言學童需要多模態肢體與圖像輔助，純口語在嘈雜環境下容易失效。</p>
+    </div>
+  </div>
+  <div class="source-tag">來源：wiki/concepts/dialogue-interaction.md</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     Slide 9: 導航 — 導言
+════════════════════════════════════════════════ -->
+<div class="slide divider-slide" id="s9">
+  <div class="slide-header">
+    <div class="big-number">04</div>
+    <div class="slide-tag green">第四章</div>
+    <h2 class="slide-title">導航、空間感知與協同移動</h2>
+    <p class="slide-subtitle">Navigation, Spatial Awareness &amp; Co-Navigation</p>
+  </div>
+  <div class="content">
+    <p style="max-width:600px;font-size:1.05rem;line-height:1.8;">
+      社交導航不只是「幾何避障」，更需考慮人際距離、轉向不確定性，以及在人機同行時雙方的<strong>空間共處狀態（Co-Location）</strong>。
+    </p>
+    <div class="content-row" style="max-width:700px;">
+      <div class="card">
+        <div class="card-title green">本章涵蓋論文</div>
+        <p>
+          <span class="badge badge-p2">Paper 2</span> 動態扇形 Costmap<br>
+          <span class="badge badge-p4">Paper 4</span> Co-Navigation POMDP<br>
+          <span class="badge badge-p5">Paper 5</span> SLAM 自主導覽
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="source-tag">來源：wiki/concepts/navigation-co-navigation.md</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     Slide 10: 導航技術比較
+════════════════════════════════════════════════ -->
+<div class="slide" id="s10">
+  <div class="slide-header">
+    <div class="slide-tag green">第四章</div>
+    <h2 class="slide-title">三種社交導航技術</h2>
+  </div>
+  <div class="content">
+    <div class="card">
+      <div class="card-title green">① 動態扇形社交本地圖（Paper 2）</div>
+      <p>改進 ROS Costmap：將移動行人建模為圓形扇區（<em>"sector of a circle"</em>），半徑與速度成正比、張角與速度成反比，預留行人轉向空間。</p>
+      <ul style="margin-top:8px;">
+        <li>感測有效範圍：<strong>4.4 公尺</strong>以內，相機與 LIDAR 效能無顯著差異</li>
+        <li>靜態避障：5 次試驗成功 4 次（<em>"four out of five trials"</em>）</li>
+        <li>動態模擬避障：5 次全數成功（<em>"avoided the moving person for each of its five trials"</em>）</li>
+        <li>端到端測試：9 次全數成功（<em>"reliable on each of the nine trials"</em>）</li>
+      </ul>
+    </div>
+    <div class="content-row">
+      <div class="card">
+        <div class="card-title purple">② 聯合策略協同導航（Paper 4）</div>
+        <p>POMDP 狀態空間整合「對話歷史」與「空間位置」。機器人學會偵測人類脫隊並主動靠近，再開口說話。共處率（Proximity Rate）接近 0.98（依 Fig. 3c 目測，正文未列文字數值）。</p>
+        <blockquote>"highest proximity rate, and a shorter episode length." — VI.C Results</blockquote>
+      </div>
+      <div class="card">
+        <div class="card-title cyan">③ SLAM 語義地圖自主導覽（Paper 5）</div>
+        <p>使用 Cartographer SLAM + Nav2，預儲 11 個展品的最佳觀賞姿態（optimal pose），系統自主規劃路徑後抵達最佳位置再向使用者說明。</p>
+        <p>⚠️ 部分受試者（P6, P7）遭遇規劃器問題（<em>"issues of the robot planner"</em>）。</p>
+      </div>
+    </div>
+  </div>
+  <div class="source-tag">來源：wiki/concepts/navigation-co-navigation.md · wiki/papers/paper2,4,5-*.md</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     Slide 11: 導航 — 衝突與挑戰
+════════════════════════════════════════════════ -->
+<div class="slide" id="s11">
+  <div class="slide-header">
+    <div class="slide-tag green">第四章</div>
+    <h2 class="slide-title">導航設計的衝突與開放挑戰</h2>
+  </div>
+  <div class="content">
+    <div class="callout conflict">
+      <span class="callout-icon">⚡</span>
+      <div>
+        <strong>自主引導 vs 使用者自主性（情境不同，策略目標相悖）</strong><br>
+        <span class="badge badge-p4">Paper 4</span> 策略以任務總時效為目標，自主引導使用者移動至下一展品。<br>
+        <span class="badge badge-p5">Paper 5</span> 實地發現：機器人未經確認即帶路前往下一展品，部分受試者感到自主性被剝奪（<em>"wasn't done at a certain exhibit"</em> — P4）。<br>
+        → <em>模擬環境中的效率最優化，不必然等同於真實使用者的體驗滿意度。</em>
+      </div>
+    </div>
+    <div class="callout speculation">
+      <span class="callout-icon">⚠️</span>
+      <div>
+        <strong>已驗證 vs 計畫中</strong><br>
+        <span class="badge badge-p2">P2 ✅ 已驗證</span> 室內 9 次端到端無碰撞導航成功。<br>
+        <span class="badge badge-p2">P2 ⚠️ 計畫</span> 即時人體速度追蹤屬未來改進計畫（<em>"developing a new person detection module that provides the velocities of people"</em>）。
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">核心設計權衡</div>
+      <ul>
+        <li>⚖️ <strong>避障保守性 vs 通行效率</strong>：過度擴大行人成本區 → 擁擠走廊動彈不得</li>
+        <li>🎙️ <strong>遠端語音微調轉向困難</strong>：受試者反映精細調整（如轉向 15 度）的口語指令難以執行</li>
+        <li>🌐 <strong>網路延遲與視訊串流穩定性</strong>：博物館嘈雜環境影響語音辨識與控制流暢度</li>
+      </ul>
+    </div>
+  </div>
+  <div class="source-tag">來源：wiki/concepts/navigation-co-navigation.md</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     Slide 12: 信任與透明性 — 導言
+════════════════════════════════════════════════ -->
+<div class="slide divider-slide" id="s12">
+  <div class="slide-header">
+    <div class="big-number">05</div>
+    <div class="slide-tag orange">第五章</div>
+    <h2 class="slide-title">信任與透明性</h2>
+    <p class="slide-subtitle">Trust, Transparency &amp; Ethical Acceptance</p>
+  </div>
+  <div class="content">
+    <p style="max-width:620px;font-size:1.05rem;line-height:1.8;">
+      信任是使用者接納社交機器人的<strong>必要先決條件</strong>。在公共環境中，信任不僅取決於功能表現，更深植於機器人如何向大眾揭示其內部運作機理與背後的<strong>權責歸屬</strong>。
+    </p>
+    <div class="content-row" style="max-width:700px;">
+      <div class="card">
+        <div class="card-title orange">本章涵蓋論文</div>
+        <p>
+          <span class="badge badge-p1">Paper 1</span> SAR 人在迴路倡議<br>
+          <span class="badge badge-p3">Paper 3</span> 雙重透明度架構<br>
+          <span class="badge badge-p5">Paper 5</span> LLM 幻覺信任危機
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="source-tag">來源：wiki/concepts/trust-transparency.md</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     Slide 13: 雙重透明度架構
+════════════════════════════════════════════════ -->
+<div class="slide" id="s13">
+  <div class="slide-header">
+    <div class="slide-tag orange">第五章</div>
+    <h2 class="slide-title">雙重透明度架構（Paper 3）</h2>
+  </div>
+  <div class="content">
+    <p><span class="badge badge-p3">Paper 3</span> 59 位師生（問卷 44 + 訪談 17）混合研究，提出兩大透明度維度：</p>
+    <div class="content-row">
+      <div class="card">
+        <div class="card-title orange">① 運作透明度（Operational Transparency）</div>
+        <p>明確溝通機器人的功能範疇、能力極限與出錯可能性。使用者需要知道機器人<em>能做什麼、不能做什麼</em>。</p>
+        <blockquote>"Operational transparency relates to how clear the robot's functions, capabilities, and limitations are communicated." — 5.2</blockquote>
+      </div>
+      <div class="card">
+        <div class="card-title orange">② 營運者透明度（Operator Transparency）</div>
+        <p>公開機器人的部署主體與資料管理責任。使用者需要知道<em>誰在背後操控、資料如何被使用</em>。</p>
+        <blockquote>"who is behind her... who is responsible for data management" — 5.2</blockquote>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title orange">擴充 Hancock 信任模型</div>
+      <p>Paper 3 擴充既有信任因素架構（Hancock et al.），並建議將「透明度與安全性」列為 Baraka 社交機器人特徵架構的第 8 項關鍵特徵（<em>"eighth key characteristic"</em>）。</p>
+      <p style="margin-top:8px;">延伸發現：男性受試者對機器人熟悉度顯著高於女性（男 M=2.61 vs 女 M=1.90，<strong>p &lt; .05</strong>）。</p>
+    </div>
+  </div>
+  <div class="source-tag">來源：wiki/concepts/trust-transparency.md · wiki/papers/paper3-campus-robot-trust.md</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     Slide 14: 信任的衝突觀點與 LLM 幻覺
+════════════════════════════════════════════════ -->
+<div class="slide" id="s14">
+  <div class="slide-header">
+    <div class="slide-tag orange">第五章</div>
+    <h2 class="slide-title">信任的衝突觀點與 LLM 幻覺危機</h2>
+  </div>
+  <div class="content">
+    <div class="callout conflict">
+      <span class="callout-icon">⚡</span>
+      <div>
+        <strong>信任充分條件：校方背書 vs 資料細節公開（觀點分歧）</strong><br>
+        <span class="badge badge-p3">Paper 3</span> 部分受試者認為校方背書即足夠（<em>"if the robots are all university-sponsored, I don't think anybody will wonder about the trustworthiness"</em> — P43）；<br>
+        另一派則堅持必須公開資料處理細節，才能建立真正信任。<br>
+        → <em>研究未裁決哪方充分，兩種立場均有受試者支持。</em>
+      </div>
+    </div>
+    <div class="callout conflict">
+      <span class="callout-icon">⚡</span>
+      <div>
+        <strong>隱私態度的兩極化</strong><br>
+        有人強烈要求面部去識別化；有人持消極態度（<em>"there's no privacy at all"</em> — I8）。<br>
+        有人認為機器人在校園出錯不可容忍；有人認為無實質危害。
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title pink" style="color:#f87171;">⚠️ LLM 幻覺信任危機（Paper 5）</div>
+      <p>地質博物館實地研究揭露：非專業使用者面對表現專業的機器人時，即使機器人產生幻覺編造資訊，使用者仍全盤採信。</p>
+      <blockquote>"it feels like right" — P18，5.3.3 Dialogue for Location-aware Narratives</blockquote>
+      <p style="margin-top:8px;">如何在不犧牲流暢體驗的前提下，向使用者即時預警 LLM 幻覺，仍是艱鉅的倫理工程挑戰。</p>
+    </div>
+  </div>
+  <div class="source-tag">來源：wiki/concepts/trust-transparency.md</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     Slide 15: 機器人角色 — 導言
+════════════════════════════════════════════════ -->
+<div class="slide divider-slide" id="s15">
+  <div class="slide-header">
+    <div class="big-number">06</div>
+    <div class="slide-tag purple">第六章</div>
+    <h2 class="slide-title">機器人角色定位</h2>
+    <p class="slide-subtitle">Robot Roles &amp; Interaction Models</p>
+  </div>
+  <div class="content">
+    <p style="max-width:620px;font-size:1.05rem;line-height:1.8;">
+      角色定位定義了機器人在互動情境中的<strong>社會身分</strong>與人機權力關係。恰當的角色塑造能設定合理的使用者心理預期，決定系統應採用自主、遙控或協同代理架構。
+    </p>
+    <div class="content-row" style="max-width:700px;">
+      <div class="card">
+        <div class="card-title purple">本章涵蓋論文</div>
+        <p>
+          <span class="badge badge-p1">Paper 1</span> 編寫者 / 遙控者角色落差<br>
+          <span class="badge badge-p3">Paper 3</span> 61 標籤公共服務角色<br>
+          <span class="badge badge-p5">Paper 5</span> 四重動態角色（遠端臨場）<br>
+          <span class="badge badge-p6">Paper 6</span> 同儕伴侶 / 三方互動
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="source-tag">來源：wiki/concepts/robot-roles.md</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     Slide 16: 機器人的多重角色
+════════════════════════════════════════════════ -->
+<div class="slide" id="s16">
+  <div class="slide-header">
+    <div class="slide-tag purple">第六章</div>
+    <h2 class="slide-title">社交機器人的多重角色類型</h2>
+  </div>
+  <div class="content">
+    <div class="content-row">
+      <div class="card">
+        <div class="card-title">遠端遙控工具（Paper 1）</div>
+        <p>編寫長篇對話的照護者與現場遙控者工作脈絡<em>截然不同</em>（<em>"fairly distinct"</em>）。系統透過按鈕模擬預覽促進視角整合，讓兩個角色之間的心智模型得以對齊。</p>
+      </div>
+      <div class="card">
+        <div class="card-title green">多元公共服務角色（Paper 3）</div>
+        <p>歸納 61 個應用標籤，7 大類別：導航、校園助理、安防與安全、推廣宣傳、娛樂、社交輔助、身心健康。機器人在校園可扮演多元且情境特定的角色。</p>
+      </div>
+    </div>
+    <div class="content-row">
+      <div class="card">
+        <div class="card-title cyan">遠端臨場的四重角色（Paper 5）</div>
+        <p>20 名受試者質化研究歸納出 4 種角色認知：</p>
+        <ul>
+          <li>🎓 <strong>專業導覽員</strong>（Guide）</li>
+          <li>🛠️ <strong>學習工具 / 中介</strong>（Tool/Medium）</li>
+          <li>🤝 <strong>忠誠夥伴</strong>（Companion）</li>
+          <li>🪞 <strong>實體自我延伸 / 化身</strong>（Proxy/Eyes）— 4 位受試者（P1,15,16,18）</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title pink">三方互動同儕伴侶（Paper 6）</div>
+        <p>Maple 在「導師–學童–機器人」三方架構中擔任<strong>注意力負載平衡器</strong>（attention load-balancer），讓巡迴導師能分配注意力給更多學童，複雜概念由真人介入。</p>
+        <blockquote>"experts converged on Maple as a peer-like companion rather than a teacher or authority figure." — 3.3</blockquote>
+      </div>
+    </div>
+  </div>
+  <div class="source-tag">來源：wiki/concepts/robot-roles.md</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     Slide 17: 角色衝突
+════════════════════════════════════════════════ -->
+<div class="slide" id="s17">
+  <div class="slide-header">
+    <div class="slide-tag purple">第六章</div>
+    <h2 class="slide-title">角色定位的衝突觀點</h2>
+  </div>
+  <div class="content">
+    <div class="callout conflict">
+      <span class="callout-icon">⚡</span>
+      <div>
+        <strong>威權導師 vs 同儕夥伴（受眾心理差異造成的角色衝突）</strong><br>
+        <span class="badge badge-p6">Paper 6</span> 專家強烈排斥威權教師角色：機器人若居高臨下，會令弱勢的新移民學童退縮（<em>"peer-like companion rather than a teacher or authority figure"</em>）。<br>
+        <span class="badge badge-p5">Paper 5</span> 博物館受試者卻高度肯定機器人作為<em>知識權威指導者</em>（instructor）的角色，因為他們主動尋求地質知識。<br>
+        → <em>情境脈絡（弱勢學童 vs 主動求知成人）決定了最適角色定位，兩者均有論文依據。</em>
+      </div>
+    </div>
+    <div class="callout speculation">
+      <span class="callout-icon">⚠️</span>
+      <div>
+        <strong>已驗證 vs 規劃中</strong><br>
+        <span class="badge badge-p5">P5 ✅ 已驗證</span> 使用者確實會依角色切換禮貌策略（politeness strategies）。<br>
+        <span class="badge badge-p6">P6 ⚠️ 規劃中</span> 三方互動架構目前奠基於 4 位導師的專家共同設計，兒童實地個案驗證仍屬未來工作（<em>"future work will explore several case studies... approximately four children"</em>）。
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">設計核心權衡</div>
+      <p>若將機器人塑造為<strong>全知權威</strong>→ 易引發幻覺誤導、剝奪使用者自主性<br>
+         若僅定位為<strong>被動工具</strong>→ 失去社交互動與引導學習的核心價值</p>
+    </div>
+  </div>
+  <div class="source-tag">來源：wiki/concepts/robot-roles.md</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     Slide 18: 應用場域 — 導言
+════════════════════════════════════════════════ -->
+<div class="slide divider-slide" id="s18">
+  <div class="slide-header">
+    <div class="big-number">07</div>
+    <div class="slide-tag cyan">第七章</div>
+    <h2 class="slide-title">應用場域與使用者族群</h2>
+    <p class="slide-subtitle">Application Domains &amp; User Groups</p>
+  </div>
+  <div class="content">
+    <p style="max-width:620px;font-size:1.05rem;line-height:1.8;">
+      應用場域與目標受眾深刻決定了機器人的外觀、感測配置、互動策略與社會規範。不同場域展現了截然不同的優先設計考量。
+    </p>
+    <div class="content-row" style="max-width:700px;">
+      <div class="card">
+        <div class="card-title cyan">本章涵蓋 6 篇論文的場域</div>
+        <p>
+          🏫 校園（Papers 2, 3）<br>
+          🏛️ 文化博物館遠端（Paper 5）<br>
+          🏠 房地產帶看（Paper 4）<br>
+          📚 兒童課輔與伴讀（Papers 1, 6）
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="source-tag">來源：wiki/concepts/application-domains.md</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     Slide 19: 四大應用場域
+════════════════════════════════════════════════ -->
+<div class="slide" id="s19">
+  <div class="slide-header">
+    <div class="slide-tag cyan">第七章</div>
+    <h2 class="slide-title">四大應用場域詳覽</h2>
+  </div>
+  <div class="content">
+    <div class="content-row">
+      <div class="card">
+        <div class="card-title green">🏫 校園行政導引（Papers 2 & 3）</div>
+        <p><span class="badge badge-p2">P2</span> 針對廣達 6,000 英畝、900 棟建築的 Rutgers 大學校園迷路新生（<em>"six thousand acres... nine hundred buildings"</em>）。</p>
+        <p style="margin-top:8px;"><span class="badge badge-p3">P3</span> 歸納 61 個校園應用標籤，7 大類別，含導航、安防、娛樂、身心健康等。</p>
+      </div>
+      <div class="card">
+        <div class="card-title cyan">🏛️ 文化場館遠端臨場（Paper 5）</div>
+        <p>部署於擁有 68 處展品的地質博物館（<em>"68 exhibits in total across four areas"</em>），精選 11 個展品，為遠端訪客提供 20 分鐘沉浸式導覽。</p>
+        <p style="margin-top:8px;">打破地理限制，但遮擋鏡頭視野（<em>"annoying when his view was blocked"</em>）與缺乏實體觸覺仍是挑戰。</p>
+      </div>
+    </div>
+    <div class="content-row">
+      <div class="card">
+        <div class="card-title purple">🏠 房地產帶看（Paper 4）</div>
+        <p>模擬包含客廳、廚房、臥室 3 個區域的帶看導覽。機器人邊走邊說明房間特徵，強調邊走邊說的<strong>空間–對話耦合挑戰</strong>。</p>
+      </div>
+      <div class="card">
+        <div class="card-title pink">📚 弱勢學童與新移民伴讀（Papers 1 & 6）</div>
+        <p><span class="badge badge-p1">P1</span> 幼兒伴讀以減輕照護者負擔。<br>
+        <span class="badge badge-p6">P6</span> 為<em>過去 5 年內抵達加拿大的新移民學童</em>設計，融入 Loonie/Toonie 貨幣與浣熊等文化常規情境故事。</p>
+      </div>
+    </div>
+  </div>
+  <div class="source-tag">來源：wiki/concepts/application-domains.md · wiki/synthesis.md</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     Slide 20: 場域衝突觀點
+════════════════════════════════════════════════ -->
+<div class="slide" id="s20">
+  <div class="slide-header">
+    <div class="slide-tag cyan">第七章</div>
+    <h2 class="slide-title">應用場域的衝突觀點與泛化限制</h2>
+  </div>
+  <div class="content">
+    <div class="callout conflict">
+      <span class="callout-icon">⚡</span>
+      <div>
+        <strong>現場親臨 vs 遠端代理（體驗本質差異）</strong><br>
+        <span class="badge badge-p5">Paper 5</span> 實證遠端臨場能打破地理限制，使用者可從世界各地探索博物館。<br>
+        <span class="badge badge-p2">Paper 2</span> 實體機器人能直接引導行走、即時調整方向，無延遲與遮擋問題。<br>
+        → <em>兩種模式各有不可替代的場域優勢，論文未主張何者更優。</em>
+      </div>
+    </div>
+    <div class="callout speculation">
+      <span class="callout-icon">⚠️</span>
+      <div>
+        <strong>泛化性仍屬推測</strong><br>
+        <span class="badge badge-p1">P1 ⚠️</span> 論文作者推測（"We suspect"）伴讀對話編寫介面可推廣至醫療或成人 SAR 領域，但尚無驗證實驗支持。
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">設計核心權衡</div>
+      <ul>
+        <li>⚖️ <strong>深度客製化 vs 通用泛化</strong>：新移民課輔高度依賴在地文化題材，難以直接移植至其他場域</li>
+        <li>🗣️ <strong>非母語口音辨識</strong>：語音模組在非美式英語環境表現較弱（Paper 2）</li>
+        <li>🛡️ <strong>防破壞（Vandalism）</strong>：公共空間機器人面臨惡意破壞風險</li>
+      </ul>
+    </div>
+  </div>
+  <div class="source-tag">來源：wiki/concepts/application-domains.md</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     Slide 21: 挑戰與未來 — 導言
+════════════════════════════════════════════════ -->
+<div class="slide divider-slide" id="s21">
+  <div class="slide-header">
+    <div class="big-number">08</div>
+    <div class="slide-tag gray">第八章</div>
+    <h2 class="slide-title">共通挑戰與未來展望</h2>
+    <p class="slide-subtitle">Cross-Paper Challenges &amp; Future Directions</p>
+  </div>
+  <div class="content">
+    <p style="max-width:620px;font-size:1.05rem;line-height:1.8;">
+      縱觀 6 篇論文，三個橫跨所有場域的核心挑戰浮現：<br>
+      <strong>① 樣本效率與泛化能力</strong>　<strong>② LLM 幻覺與事實正確性</strong>　<strong>③ 社會接受度的缺口</strong>
+    </p>
+  </div>
+  <div class="source-tag">來源：wiki/synthesis.md</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     Slide 22: 研究限制整理
+════════════════════════════════════════════════ -->
+<div class="slide" id="s22">
+  <div class="slide-header">
+    <div class="slide-tag gray">第八章</div>
+    <h2 class="slide-title">六篇論文的共通研究限制</h2>
+  </div>
+  <div class="content">
+    <div class="card" style="overflow-x:auto;">
+      <table class="cmp-table">
+        <thead>
+          <tr>
+            <th>論文</th>
+            <th>主要限制（論文明確指出）</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="badge badge-p1">P1</span></td>
+            <td>尚無量化受試者實驗；缺乏跨平台通用對話格式；自動生成為語境無關的隨機選取</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-p2">P2</span></td>
+            <td>視覺偵測無法計算行人即時速度；語音對非美式口音辨識較弱；尚未評估社會接受度</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-p3">P3</span></td>
+            <td>受試者年輕學生與具科技背景者比例偏高；訪談樣本（17人）限制跨文化泛化性</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-p4">P4</span></td>
+            <td>強化學習樣本效率低，限制特徵槽位規模；視覺、語言與策略未端到端整合</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-p5">P5</span></td>
+            <td>嘈雜環境干擾語音辨識；LLM 幻覺且非專業者難以察覺；僅諮詢單一地質專家</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-p6">P6</span></td>
+            <td>成果奠基於 4 位專家視角；兒童長程實地驗證（約 4 名學童）仍在規劃中</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="highlight">
+      🔬 共通瓶頸：所有論文均面臨<strong>真實社會場域的複雜性</strong>遠超實驗室可控條件的挑戰。
+    </div>
+  </div>
+  <div class="source-tag">來源：wiki/synthesis.md</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     Slide 23: 未來研究方向
+════════════════════════════════════════════════ -->
+<div class="slide" id="s23">
+  <div class="slide-header">
+    <div class="slide-tag gray">第八章</div>
+    <h2 class="slide-title">未來研究方向（論文明確規劃）</h2>
+  </div>
+  <div class="content">
+    <div class="content-row">
+      <div class="card">
+        <div class="card-title">正式受試者實驗</div>
+        <p><span class="badge badge-p1">Paper 1</span></p>
+        <p>⚠️ 論文推測（"We suspect"）：比較專用介面 vs 遙控介面 vs 試算表在編寫時間與易用度的差異，尚未執行。</p>
+        <blockquote>"We plan to experimentally evaluate the authoring interface's performance compared to other interfaces." — Section 4.1 FUTURE WORK</blockquote>
+      </div>
+      <div class="card">
+        <div class="card-title green">更好的行人速度追蹤</div>
+        <p><span class="badge badge-p2">Paper 2</span></p>
+        <p>計畫開發能即時計算行人速度的新感測模組，以更精確預測轉向意圖並動態調整 Costmap。</p>
+        <blockquote>"developing a new person detection module that provides the velocities of people." — 8 CONCLUSION</blockquote>
+      </div>
+    </div>
+    <div class="content-row">
+      <div class="card">
+        <div class="card-title purple">端到端學習整合</div>
+        <p><span class="badge badge-p4">Paper 4</span></p>
+        <p>計畫進一步將語言理解與視覺感知融入強化學習迴路，實現端到端的空間–對話聯合訓練。</p>
+        <blockquote>"enable end-to-end learning by further incorporating language understanding and perception into the loop." — VII CONCLUSION</blockquote>
+      </div>
+      <div class="card">
+        <div class="card-title pink">兒童實地個案驗證</div>
+        <p><span class="badge badge-p6">Paper 6</span></p>
+        <p>與 UFL 合作，招募約 4 名 5–10 歲學童進行伴讀測試與放聲思考訪談，驗證三方互動架構的實際成效。</p>
+        <blockquote>"children aged between 5-10 years old... approximately four children." — 4 Discussion and Future Work</blockquote>
+      </div>
+    </div>
+  </div>
+  <div class="source-tag">來源：wiki/papers/paper1,2,4,6-*.md · wiki/synthesis.md</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     Slide 24: 總結
+════════════════════════════════════════════════ -->
+<div class="slide" id="s24">
+  <div class="slide-header">
+    <div class="slide-tag">總結</div>
+    <h2 class="slide-title">社交機器人走入社會：三大核心命題</h2>
+  </div>
+  <div class="content">
+    <div class="content-row">
+      <div class="card">
+        <div class="card-title">① 語言 × 空間的耦合不可分割</div>
+        <p>在哪裡說話與說什麼同等重要。Paper 4 的 DRRL 聯合策略最直接回應了這一命題——機器人必須學會先移動至與人共處的位置，再開口說話。</p>
+      </div>
+      <div class="card">
+        <div class="card-title green">② 信任需要雙重透明度</div>
+        <p>使用者必須同時清楚「機器人能做什麼／不能做什麼」（運作透明度）以及「誰在背後、資料如何使用」（營運者透明度）。LLM 幻覺更使事實查核成為倫理急迫課題。</p>
+      </div>
+    </div>
+    <div class="content-row">
+      <div class="card">
+        <div class="card-title purple">③ 角色設計具有情境特異性</div>
+        <p>沒有普適的「最佳角色」：博物館成人求知者需要知識權威，弱勢學童需要平易同儕。機器人的角色定位必須深度契合使用者族群的心理需求與社會情境。</p>
+      </div>
+      <div class="card">
+        <div class="card-title cyan">📌 閱讀更多</div>
+        <ul>
+          <li>概念深探 → <code>wiki/concepts/*.md</code></li>
+          <li>論文細節 → <code>wiki/papers/*.md</code></li>
+          <li>橫向比較 → <code>wiki/synthesis.md</code></li>
+          <li>知識地圖 → <code>wiki/index.md</code></li>
+        </ul>
+      </div>
+    </div>
+    <div class="highlight" style="text-align:center;">
+      🤖 未來的社交機器人必須是「<strong>運作與營運雙重透明</strong>」、「<strong>空間與語意同步感知</strong>」、且「<strong>具備文化與情境包容力</strong>」的複合體。
+    </div>
+  </div>
+  <div class="source-tag">來源：wiki/synthesis.md · wiki/index.md</div>
+</div>
+
+</div><!-- /slide-container -->
+
+<!-- BOTTOM NAV -->
+<div id="nav">
+  <button class="nav-btn" id="btn-prev" onclick="go(-1)">← 上一頁</button>
+  <div id="dots"></div>
+  <button class="nav-btn" id="btn-next" onclick="go(1)">下一頁 →</button>
+</div>
+
+<script>
+  const TOTAL = 24;
+  let cur = 0;
+
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const counter = document.getElementById('counter');
+  const dotsEl = document.getElementById('dots');
+  const btnPrev = document.getElementById('btn-prev');
+  const btnNext = document.getElementById('btn-next');
+
+  // build dots
+  for (let i = 0; i < TOTAL; i++) {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.title = `第 ${i+1} 頁`;
+    d.addEventListener('click', () => show(i));
+    dotsEl.appendChild(d);
+  }
+
+  function show(idx) {
+    if (idx < 0 || idx >= TOTAL) return;
+    slides[cur].classList.remove('active');
+    dotsEl.children[cur].classList.remove('active');
+    cur = idx;
+    slides[cur].classList.add('active');
+    dotsEl.children[cur].classList.add('active');
+    slides[cur].scrollTop = 0;
+    counter.textContent = `${cur + 1} / ${TOTAL}`;
+    btnPrev.disabled = cur === 0;
+    btnNext.disabled = cur === TOTAL - 1;
+  }
+
+  function go(delta) { show(cur + delta); }
+
+  // keyboard navigation
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); go(1); }
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')  { e.preventDefault(); go(-1); }
+    if (e.key === 'Home') show(0);
+    if (e.key === 'End')  show(TOTAL - 1);
+  });
+
+  // touch / swipe
+  let touchX = null;
+  document.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; }, { passive: true });
+  document.addEventListener('touchend', e => {
+    if (touchX === null) return;
+    const dx = e.changedTouches[0].clientX - touchX;
+    if (Math.abs(dx) > 40) go(dx < 0 ? 1 : -1);
+    touchX = null;
+  }, { passive: true });
+
+  // init state
+  btnPrev.disabled = true;
+</script>
+</body>
+</html>

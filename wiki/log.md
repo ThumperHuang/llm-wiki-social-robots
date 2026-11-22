@@ -18,3 +18,4 @@
 | 2026-11-22 | Synthesize & Index | wiki/synthesis.md, wiki/index.md, wiki/log.md | 建立橫向比較頁 synthesis.md（6 篇大表每格附出處、設計空間圖、課堂講綱）；更新 index.md 加入初學者閱讀路徑與全頁面相對路徑連結 |
 | 2026-11-22 | Lint (Checkpoint B) | AGENTS.md, wiki/lint-report.md, wiki/log.md | 執行全局 Lint 檢查（掃描 93 條相對連結、14 份 Wiki 文件、12 份內容文件）：修正 AGENTS.md 示範路徑轉為 code 格式後複驗通過，死連結 0、孤島頁面 0、無出處頁面 0 |
 | 2026-11-22 | Refine & Lint Doc | AGENTS.md, wiki/lint-report.md, wiki/papers/paper2-campus-guide.md, wiki/papers/paper3-campus-robot-trust.md, wiki/papers/paper4-joint-dialog-navigation.md, wiki/papers/paper6-codesign-newcomer-learning.md, wiki/synthesis.md, wiki/log.md | 還原 AGENTS.md 示範語法並於 5.2 節明訂 Lint 排除手冊範例；於 lint-report.md 誠實記錄排除決策；澄清 Paper 4 之 95% 係 Fig. 3a 目測非文字數據；全面抽換非論文修辭為論文實際原文術語；於 lint-report.md 新增「Lint 的限制」獨立小節 |
+| 2026-11-22 | Slide Gen | slides.html, wiki/log.md | 依 AGENTS.md 第 4 節規範，嚴格依據 wiki/ 內容（index.md, synthesis.md, 5 篇概念頁）生成單一自含教學型 HTML 簡報（24 張投影片），無外部依賴，含鍵盤／按鈕導覽、頁碼、頁尾出處標註；衝突觀點並列，推測內容標記 ⚠️ |
