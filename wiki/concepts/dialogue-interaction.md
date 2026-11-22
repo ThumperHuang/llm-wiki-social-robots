@@ -1,25 +1,32 @@
 ---
 title: "對話與語言互動機制 (Dialogue & Language Interaction)"
 type: concept
-tags: [對話互動, NLP, 智慧斷句, 社交機器人]
-sources: [paper1]
+tags: [對話互動, NLP, DRRL, LLM, 社交機器人]
+sources: [paper1, paper2, paper4, paper5, paper6]
 date: 2026-11-22
 ---
 
 # 對話與語言互動機制 (Dialogue & Language Interaction)
 
 ## 1. 核心定義與在社交機器人中的重要性
-對話與語言互動機制是社交機器人與人類建立溝通橋樑、傳遞服務內容與維持社交臨場感的核心技術。在人機互動中，對話不僅承載資訊傳遞，更具備調節人際節奏、維持關係（rapport）與處理溝通中斷的社交功能。若缺乏符合人類社交習慣的對話設計，機器人容易在發話時顯得生硬或遲鈍，進而大幅降低使用者的互動意願與整體體驗。
+對話與語言互動機制是社交機器人與人類溝通、傳遞資訊並建立社交連結的核心基礎。在實體機器人系統中，語言互動不僅涉及語意解析，更與說話時機、人機空間共處狀態及社交禮節緊密交織。
 
 ## 2. 各論文觀點與技術作法比較
-- **社交輔助對話的結構化模組** `[paper1.pdf, Section 1 INTRODUCTION]`：  
-  Paper 1 指出典型社交輔助互動通常遵循特定內容主題架構：開頭與結尾集中於建立關係（rapport building），核心階段專注於輔助內容傳遞，並穿插提問後的反饋（feedback）及未知狀態宣告（ignorance statements）。
-- **自然語言處理輔助智慧斷句** `[paper1.pdf, Section 2.2.2 Long Dialogue Utterance Splitting]`：  
-  Paper 1 採用 `spaCy` NLP 函式庫，依據標點符號、換行、字詞數上限（論文未給具體數值）以及從屬連接詞（subordinating conjunctions）進行智慧斷句。此舉確保機器人發話單元短小精悍，使操作者能有效掌控對話節奏，並適應現實中可能出現的插話。
-- *(其他論文待 Ingest 後持續補充)*
+- **規則與 NLP 輔助編寫** `[paper1.pdf, Section 2.2]`：Paper 1 透過 `spaCy` 依標點與語法從屬連接詞進行斷句（論文未給數值），並自動插入破冰與問答反饋，以降低編寫負擔。
+- **語音與 LLM 檢索生成** `[paper2.pdf, 4 SPEECH MODULE]`：Paper 2 在音量超標時切換導引模式（關鍵字查表）與指示模式（調用 GPT 結合環境描述生成語句），驗證了 9 次導覽全數成功（*"reliable on each of the nine trials"*）。
+- **強化學習之空間–對話聯合決策** `[paper4.pdf, V. PROPOSED APPROACH]`：Paper 4 透過 RecurrentPPO 聯合決策對話或移動動作，實證顯示在 100 次運行中達成最高共處率（*"highest proximity rate"*，接近 0.98），學會在發話前優先確認人機共處。
+- **具身化 LLM 空間敘事** `[paper5.pdf, 3.3.3, 5.1]`：Paper 5 整合 GPT-4 與空間網格，在靜默 45 秒後（*"after a 45-second period of silence"*) 主動提問，成對檢定顯示受試者顯著傾向接受其推薦（接受 2.90 次 vs 拒絕 0.9 次, p=0.0007）。
 
-## 3. 設計權衡與開放挑戰 (Trade-offs & Challenges)
-當前對話編寫的主要權衡在於「自動化程度」與「情境語境適應力」。如 Paper 1 所面臨之挑戰 `[paper1.pdf, Section 4.2 Additional Features]`，目前自動插入的問候與反饋語句多屬語境無關（context-agnostic）的預設清單，雖維持了一致性與簡便性，但缺乏對複雜動態情境的語境感知能力（context-aware generation）。此外，跨平台缺乏通用對話標準亦阻礙了對話內容的重用。
+## 3. 觀點衝突、推測與已驗證結果
+- **主動提問的衝突**：Paper 5 實證主動提問能激發好奇心；但 Paper 3 訪談顯示受試者認為在公共走廊主動搭話會造成混亂與反感（*"too chaotic if Pepper was just randomly approaching people"*）。兩者情境分別為自願參觀與趕課公共場合。
+- **推測 vs 已驗證**：Paper 4 已驗證聯合策略優於交替基線（*"outperforms the baselines"*）；而 Paper 1 認為專用編寫介面能顯著提升速度與易用度則屬於推測（*"We suspect that using a dedicated authoring interface... would be rated higher"*）。
 
-## 4. 參考文獻對照 (References)
-- [A Robot Dialogue Authoring Interface with Smart Capabilities](../papers/paper1-dialogue-authoring.md) — Section 1 & Section 2.2.2：*"By having shorter dialogue actions, teleoperators can better maintain the pace of conversation."*
+## 4. 設計權衡與開放挑戰 (Trade-offs & Challenges)
+核心權衡在於「自由對話的靈活性」與「事實正確性」。Paper 5 發現 LLM 容易產生幻覺，且非專業使用者難以察覺；Paper 6 則強調多語言學童需要多模態肢體與圖像輔助，純口語互動容易因環境雜音與口音而失效。
+
+## 5. 參考文獻對照 (References)
+- [Paper 1](../papers/paper1-dialogue-authoring.md) — Section 2.2.2：*"By having shorter dialogue actions, teleoperators can better maintain the pace of conversation."*
+- [Paper 2](../papers/paper2-campus-guide.md) — 4 SPEECH MODULE：*"uses a large language model (LLM) to generate a set of instructions"*
+- [Paper 4](../papers/paper4-joint-dialog-navigation.md) — V. PROPOSED APPROACH：*"maps a state that includes spatial and dialogue historical information to either a navigation or a dialog action."*
+- [Paper 5](../papers/paper5-narrative-remote-guide.md) — 5.1 Quantitative Results：*"significantly more acceptance... than rejections [t(19) = 4.06, p = 0.0007]."*
+- [Paper 6](../papers/paper6-codesign-newcomer-learning.md) — 3.4.1 Guideline 1：*"present key vocabulary and instructions in multiple modalities"*

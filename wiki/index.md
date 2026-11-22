@@ -54,11 +54,11 @@ graph TD
 | 編號 | 論文標題 | 發表會議/年份 | 核心主題 | 狀態 | 連結 |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | **Paper 1** | *A Robot Dialogue Authoring Interface with Smart Capabilities* | HRI '24 Companion | 社交輔助機器人對話編寫介面、NLP 斷句與無形勞動消除 | ✅ 已吸納 | [詳細筆記](papers/paper1-dialogue-authoring.md) |
-| **Paper 2** | *Development of a Socially Cognizant Robotic Campus Guide* | HRI '24 Companion | 社會意識校園導覽、動態扇形 Costmap 與跨領域設計 | ⏳ 待處理 | `papers/paper2-campus-guide.md` |
-| **Paper 3** | *Factors of Trust for Successfully Adopting Social Robots on the Campus* | OZCHI '25 | 校園 Pepper 機器人、運作與營運者透明度、信任因素 | ⏳ 待處理 | `papers/paper3-campus-robot-trust.md` |
-| **Paper 4** | *Learning Joint Policies for Human-Robot Dialog and Co-Navigation* | IROS 2023 | 深度循環強化學習（DRRL）、對話與協同導航聯合策略 | ⏳ 待處理 | `papers/paper4-joint-dialog-navigation.md` |
-| **Paper 5** | *NarraGuide: an LLM-based Narrative Mobile Robot for Remote Place Exploration* | UIST '25 | 博物館遠端臨場、LLM 空間敘事引導、旁觀者效應 | ⏳ 待處理 | `papers/paper5-narrative-remote-guide.md` |
-| **Paper 6** | *Co-designing a Social Robot for Newcomer Children’s Cultural and Language Learning* | HRI Companion '26 | 新移民兒童同儕機器人 Maple、第二語言與文化共學、三方互動 | ⏳ 待處理 | `papers/paper6-codesign-newcomer-learning.md` |
+| **Paper 2** | *Development of a Socially Cognizant Robotic Campus Guide* | HRI '24 Companion | 社會意識校園導覽、動態扇形 Costmap 與跨領域設計 | ✅ 已吸納 | [詳細筆記](papers/paper2-campus-guide.md) |
+| **Paper 3** | *Factors of Trust for Successfully Adopting Social Robots on the Campus* | OZCHI '25 | 校園 Pepper 機器人、運作與營運者透明度、信任因素 | ✅ 已吸納 | [詳細筆記](papers/paper3-campus-robot-trust.md) |
+| **Paper 4** | *Learning Joint Policies for Human-Robot Dialog and Co-Navigation* | IROS 2023 | 深度循環強化學習（DRRL）、對話與協同導航聯合策略 | ✅ 已吸納 | [詳細筆記](papers/paper4-joint-dialog-navigation.md) |
+| **Paper 5** | *NarraGuide: an LLM-based Narrative Mobile Robot for Remote Place Exploration* | UIST '25 | 博物館遠端臨場、LLM 空間敘事引導、旁觀者效應 | ✅ 已吸納 | [詳細筆記](papers/paper5-narrative-remote-guide.md) |
+| **Paper 6** | *Co-designing a Social Robot for Newcomer Children’s Cultural and Language Learning* | HRI Companion '26 | 新移民兒童同儕機器人 Maple、第二語言與文化共學、三方互動 | ✅ 已吸納 | [詳細筆記](papers/paper6-codesign-newcomer-learning.md) |
 
 ---
 
